@@ -1,5 +1,6 @@
 package sand.controller;
 import java.awt.*;
+import sand.model.*;
 import java.util.*;
 import sand.view.*;
 import java.util.Random;
@@ -15,7 +16,7 @@ public class SandLab
   public static final int FLY = 5;
   
   //do not add any more fields below
-  private int[][] grid;
+  private Particle[][] grid;
   private SandDisplay display;
   
   private Random rand = new Random();
