@@ -1,54 +1,27 @@
 package sand.controller;
-import java.awt.*;
-import sand.model.*;
-import java.util.*;
-import sand.view.*;
+import java.util.HashMap;
 import java.util.Random;
+
+import sand.model.Constants;
+import sand.model.particles.Particle;
+import sand.view.SandDisplay;
 public class SandLab
 {
-  //Step 4,6
-  //add constants for particle types here
-  public static final int EMPTY = 0;
-  public static final int FONDANT = 1;
-  public static final int CRUMB = 2;
-  public static final int HONEY = 3;
-  public static final int FIRE = 4;
-  public static final int FLY = 5;
-  
+// Map Particle Types to an integer representation
+	private final static Particle[] PARTICLETYPES = Constants.SandDisplayConstants.PARTICLETYPES;
+	private static final int EMPTY = 0;
+	private static final int SAND = 1;
+	
+	HashMap<String, Integer> particleIdentifiers = new HashMap<String, Integer>();
+	for (int index = 0; index < PARTICLETYPES.length; index++)
+	{
+		particleIdentifiers.put(PARTICLETYPES[index].getClass().getSimpleName(), index);
+	}
   //do not add any more fields below
   private Particle[][] grid;
   private SandDisplay display;
   
   private Random rand = new Random();
-  static private enum ParticleColor 
-  {
-	  EMPTY(new Color(156,255,220)),
-	  FONDANT(new Color(255,255,255)),
-	  CRUMB(new Color(95, 75, 55)),
-	  HONEY(new Color(245,193,37)),
-	  FIRE(new Color(250, 27, 27)),
-	  FLY(new Color(0,0,0));
-	  
-	  
-	  
-	  private final Color color;
-	  
-	  ParticleColor(Color color)
-	  {
-		  this.color = color;
-	  }
-	  
-	  public Color getColor()
-	  {
-		  return this.color;
-	  }
-	  
-	  static public int getSize()
-	  {
-		  return values().length;
-	  }
-  }
-  
   
   /**
    * Constructor for SandLab
@@ -60,18 +33,12 @@ public class SandLab
     String[] names;
     // Change this value to add more buttons
     //Step 4,6
-    names = new String[ParticleColor.getSize()];
+    names = new String[Constants.SandDisplayConstants.PARTICLETYPES.length];
     // Each value needs a name for the button
-    names[EMPTY] = "Empty";
-    names[FONDANT] = "Fondant";
-    names[CRUMB] = "Crumb";
-    names[HONEY] = "Honey";
-    names[FIRE] = "Fire";
-    names[FLY] = "Fly";
-    
+
     
     //1. Add code to initialize the data member grid with same dimensions
-    grid = new int[numRows][numCols];
+    grid = new Particle[numRows][numCols];
     
     display = new SandDisplay("Falling Sand", numRows, numCols, names);
   }

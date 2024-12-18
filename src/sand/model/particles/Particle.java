@@ -1,5 +1,8 @@
-package sand.model;
+package sand.model.particles;
 import sand.controller.*;
+import sand.model.Constants;
+import sand.model.Constants.ParticleConstants;
+
 import java.awt.Color;
 
 public abstract class Particle
@@ -15,7 +18,7 @@ public abstract class Particle
 	{
 		this.row = -1;
 		this.column = -1;
-		this.particleColor = Constants.Particle.defaultParticleColor;
+		this.particleColor = Constants.ParticleConstants.defaultParticleColor;
 	}
 	
 	public Particle(int row, int column, Color color)
@@ -45,10 +48,7 @@ public abstract class Particle
 	}
 	
 	
-	public abstract void update(SandLab lab);
-	
-	
-	
+	public abstract void update(SandLab lab);	
 	
 	
 	
