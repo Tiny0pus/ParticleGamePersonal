@@ -5,17 +5,23 @@ import java.util.Random;
 import sand.model.Constants;
 import sand.model.particles.Particle;
 import sand.view.SandDisplay;
+
+
+
+
+
+
 public class SandLab
 {
+
+
+
 // Map Particle Types to an integer representation
-	private final static Particle[] PARTICLETYPES = Constants.SandDisplayConstants.PARTICLETYPES;
-	private static final int EMPTY = 0;
-	private static final int SAND = 1;
-	
-	HashMap<String, Integer> particleIdentifiers = new HashMap<String, Integer>();
+	private final static Particle[] PARTICLETYPES = Constants.SandDisplayConstants.PARTICLETYPES;	
+	HashMap<Integer, String> particleIdentifiers = new HashMap<Integer, String>();
 	for (int index = 0; index < PARTICLETYPES.length; index++)
 	{
-		particleIdentifiers.put(PARTICLETYPES[index].getClass().getSimpleName(), index);
+		particleIdentifiers.put(index, PARTICLETYPES[index].getClass().getSimpleName());
 	}
   //do not add any more fields below
   private Particle[][] grid;
@@ -35,20 +41,24 @@ public class SandLab
     //Step 4,6
     names = new String[Constants.SandDisplayConstants.PARTICLETYPES.length];
     // Each value needs a name for the button
+	for (int particleIntegerRepresentation = 0; particleIntegerRepresentation < PARTICLETYPES.length; particleIntegerRepresentation++)
+	{
+		String className = particleIdentifiers.get(particleIntegerRepresentation);
+		names[particleIntegerRepresentation] = className;
+	}
 
     
     //1. Add code to initialize the data member grid with same dimensions
-    grid = new Particle[numRows][numCols];
+    grid = new int[rows][cols];
     
     display = new SandDisplay("Falling Sand", numRows, numCols, names);
-  }
+  
   
   //called when the user clicks on a location using the given tool
-  private void locationClicked(int row, int col, int tool)
+  private void locationClicked(int row, int col, int particleIntegerRepresentation)
   {
-  this.grid[row][col] = tool;
+  this.grid[row][col] = particleIntegerRepresentation;
 
-    //2. Assign the values associated with the parameters to the grid
    
   }
 
@@ -85,25 +95,7 @@ public class SandLab
 	 
 	  int randomCol = (int) (Math.random() * grid[0].length);
 	  int randomRow = (int) (Math.random() * grid.length);
-	  int particleType = grid[randomRow][randomCol];
 	  
-	  if (particleType == CRUMB)
-	  {
-		  updateCrumb(randomRow, randomCol);
-	  }
-	  else if (particleType == HONEY)
-	  {
-		  updateHoney(randomRow, randomCol);
-	  }
-	  else if (particleType == FIRE)
-	  {
-		  updateFire(randomRow, randomCol);
-		  
-	  }
-	  else if (particleType == FLY)
-	  {
-		  updateFly(randomRow, randomCol);
-	  }
 	  
 	  
 	  
@@ -163,153 +155,27 @@ public class SandLab
   }
   
   
-  private void updateFly(int currentRow, int currentCol)
-  {
-	  int otherRow = currentRow;
-	  int otherCol = currentCol;
-	  boolean horizontal;
-	  boolean vertical;
-	  int finalDirection = 1;
-	  //choose cardinal direction
-	  if (Math.random() < 0.5)
-	  {
-		  finalDirection = -1;
-	  }
+ 
+
 	  
-	  
-	  if (Math.random() < 0.5)
-	  {
-		  horizontal = true;
-		  vertical = false;
-	  }
-	  else
-	  {
-		  vertical = true;
-		  horizontal = false;
-	  }
-	  if (horizontal)
-	  {
-		  otherRow += finalDirection;
-	  }
-	  else
-	  {
-		  otherCol += finalDirection;
-	  }
-	  if (isValidAndContains(otherRow, otherCol, new int[] {HONEY, EMPTY, FONDANT}))
-	  {
-		  swapParticles(currentRow, currentCol, otherRow, otherCol);
-	  }
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-  }
+  
   
  
   
   
-  private void updateFire(int currentRow, int currentCol)
-  {
-	  if (Math.random() < 0.01)
-	  {
-		  grid[currentRow][currentCol] = 0;
-	  }
-	  int randomDirection = (int) (Math.random() * 3)-1;
-	  int otherRow = currentRow;
-	  int otherCol = currentCol;
-	  if (otherRow < 1)
-	  {
-		  return;
-	  }
-	  if (randomDirection == 0)
-	  {
-		  otherRow --;
-	  }
-	  otherCol += randomDirection;
-	  
-	  
 
-	  
-	  
-	  if (!isValidAndContains(otherRow, otherCol, new int[] {0,1,2,3,5}))
-	  {
-		  return;
-	  }
-	  
-	  grid[otherRow][otherCol] = 0;
-	  swapParticles(currentRow, currentCol, otherRow, otherCol);
-
-  }
   
   
-  private void updateHoney(int currentRow, int currentCol)
-  {
-	  //give each honey a 50/50 chance to move
-	  //simulates a "viscosity"
-	  boolean canMove = (Math.random() < 0.5);
-	  if (!canMove)
-	  {
-		  return;
-	  }
-	  int randomDirection = (int) (Math.random() * 3)-1;
-	  int otherRow = currentRow;
-	  int otherCol = currentCol;
-	  if (randomDirection == 0)
-	  {
-		  otherRow ++;
-	  }
-	  otherCol += randomDirection;
-	  
-	
-	  if (!isWithinBounds(otherRow, otherCol))
-	  {
-		  return;
-	  }
-	  
-	  if (grid[otherRow][otherCol] != EMPTY)
-	  {
-		  return;
-	  }
-	  
-	  swapParticles(currentRow, currentCol, otherRow, otherCol);
+ 
 	  
 	  
 	  
 	  
 	  
-	  
-  }
   
   
-  private void updateCrumb(int currentRow, int currentCol)
-  {
-	  int otherRow = currentRow + 1;
-	  int otherCol = currentCol;
-	  int direction = 0;
-	  if (Math.random() < 2)
-	  {
-		  direction = + (int) (Math.random() * 3) - 1;
-	  }
-
-		if (currentRow +1 < grid.length)
-		{
-			if (isWithinBounds(otherRow, otherCol + direction))
-			{
-				otherCol += direction;
-			}
-			if (grid[currentRow + 1][currentCol] == EMPTY || grid[currentRow + 1][currentCol] == HONEY)
-			{
-				
-					swapParticles(currentRow, currentCol, otherRow, otherCol);
-			}
-		
-		}
-
-		
-  }
+  
+  
   
   //do not modify this method!
   public void run()
